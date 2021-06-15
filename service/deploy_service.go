@@ -38,33 +38,56 @@ func GetDeployment(context echo.Context) error {
 
 func CreateDeployment(context echo.Context) error {
 
+	deployPayload, err := fitDeployPayload(context)
+	if err != nil {
+		return common.ErrorResponse(context, err.Error(), "Binding Error Occur.")
+	}
+	deployment, err := deployConfig.ClientSet.
+		AppsV1().Deployments(metaV1.NamespaceDefault).Create(deployConfig.Context, deployPayload, metaV1.CreateOptions{})
+	if err != nil {
+		return common.ErrorResponse(context, err.Error(), "Deployment Error Occur.")
+	}
+	return common.SuccessResponse(context, "Deployed Successful", deployment)
+}
+
+func fitDeployPayload(context echo.Context) (*appsV1.Deployment, error) {
+	type Payload struct {
+		Port     int    `json:"port"`
+		Image    string `json:"image"`
+		Replica  int    `json:"replica"`
+		AppsName string `json:"apps_name"`
+	}
+	data := new(Payload)
+	if err := context.Bind(data); err != nil {
+		return nil, err
+	}
 	deployment := &appsV1.Deployment{
 		ObjectMeta: metaV1.ObjectMeta{
-			Name: "demo-deployment",
+			Name: data.AppsName + "-deployment",
 		},
 		Spec: appsV1.DeploymentSpec{
-			Replicas: int32Cnv(1),
+			Replicas: int32ConvertToStarInteger32(int32(data.Replica)),
 			Selector: &metaV1.LabelSelector{
 				MatchLabels: map[string]string{
-					"app": "demo",
+					"app": data.AppsName,
 				},
 			},
 			Template: coreV1.PodTemplateSpec{
 				ObjectMeta: metaV1.ObjectMeta{
 					Labels: map[string]string{
-						"app": "demo",
+						"app": data.AppsName,
 					},
 				},
 				Spec: coreV1.PodSpec{
 					Containers: []coreV1.Container{
 						{
-							Name:  "web",
-							Image: "nginx:1.12",
+							Name:  data.AppsName,
+							Image: data.Image,
 							Ports: []coreV1.ContainerPort{
 								{
 									Name:          "http",
 									Protocol:      coreV1.ProtocolTCP,
-									ContainerPort: 8081,
+									ContainerPort: int32(data.Port),
 								},
 							},
 						},
@@ -74,12 +97,8 @@ func CreateDeployment(context echo.Context) error {
 		},
 	}
 
-	deployment, err := deployConfig.ClientSet.
-		AppsV1().Deployments(metaV1.NamespaceDefault).Create(deployConfig.Context, deployment, metaV1.CreateOptions{})
-	if err != nil {
-		return common.ErrorResponse(context, err.Error(), "Deployment Error Occure.")
-	}
-	return common.SuccessResponse(context, "Deployed Successful", deployment)
+	return deployment, nil
 }
-
-func int32Cnv(i int32) *int32 { return &i }
+func int32ConvertToStarInteger32(i int32) *int32 {
+	return &i
+}
