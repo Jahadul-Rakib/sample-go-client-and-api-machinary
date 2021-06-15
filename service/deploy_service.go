@@ -3,7 +3,7 @@ package service
 import (
 	"github.com/labstack/echo/v4"
 	"go_client/common"
-	appV1 "k8s.io/api/apps/v1"
+	appsV1 "k8s.io/api/apps/v1"
 	coreV1 "k8s.io/api/core/v1"
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -38,11 +38,11 @@ func GetDeployment(context echo.Context) error {
 
 func CreateDeployment(context echo.Context) error {
 
-	deployment := &appV1.Deployment{
+	deployment := &appsV1.Deployment{
 		ObjectMeta: metaV1.ObjectMeta{
 			Name: "demo-deployment",
 		},
-		Spec: appV1.DeploymentSpec{
+		Spec: appsV1.DeploymentSpec{
 			Replicas: int32Cnv(1),
 			Selector: &metaV1.LabelSelector{
 				MatchLabels: map[string]string{
