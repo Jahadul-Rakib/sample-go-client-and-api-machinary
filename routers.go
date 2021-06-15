@@ -18,6 +18,8 @@ func Router(e *echo.Echo) {
 
 func DeployRouter(baseRouter *echo.Group) {
 	baseRouter.GET("", service.GetAllDeployment)
+	baseRouter.GET("/:name", service.GetDeployment)
+	baseRouter.POST("", service.CreateDeployment)
 }
 
 func ServiceRouter(baseRouter *echo.Group) {
