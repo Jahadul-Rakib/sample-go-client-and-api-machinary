@@ -49,6 +49,20 @@ func CreateDeployment(context echo.Context) error {
 	}
 	return common.SuccessResponse(context, "Deployed Successful", deployment)
 }
+func DeleteDeployment(context echo.Context) error {
+	name := context.Param("name")
+	_, err := deployConfig.ClientSet.
+		AppsV1().Deployments(metaV1.NamespaceDefault).Get(deployConfig.Context, name, metaV1.GetOptions{})
+	if err != nil {
+		return common.ErrorResponse(context, err.Error(), "Error Not Found!!!")
+	}
+	err = deployConfig.ClientSet.
+		AppsV1().Deployments(metaV1.NamespaceDefault).Delete(deployConfig.Context, name, metaV1.DeleteOptions{})
+	if err != nil {
+		return common.ErrorResponse(context, err.Error(), "Deployment delete Error Occur.")
+	}
+	return common.SuccessResponse(context, "Deployed Successful", "Done!!!")
+}
 
 func fitDeployPayload(context echo.Context) (*appsV1.Deployment, error) {
 	type Payload struct {
