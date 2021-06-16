@@ -94,7 +94,7 @@ func FitServicePayload(context echo.Context) (*coreV1.Service, error) {
 			},
 			Type: types,
 			Ports: []coreV1.ServicePort{
-				{Name: data.ServiceName,
+				{
 					Protocol:   coreV1.ProtocolTCP,
 					Port:       data.Port,
 					TargetPort: intstr.FromInt(data.TargetPort),

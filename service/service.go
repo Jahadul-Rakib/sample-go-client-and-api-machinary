@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/labstack/echo/v4"
 	"go_client/common"
+	coreV1 "k8s.io/api/core/v1"
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -57,11 +58,43 @@ func CreateService(context echo.Context) error {
 	return common.SuccessResponse(context, "Service Successfully created", service)
 }
 
-//func UpdateService(context echo.Context) error {
-//	payload, err := common.FitServicePayload(context)
-//	if err != nil {
-//		return common.ErrorResponse(context, err.Error(), "Binding Error Occur.")
-//	}
-//
-//
-//}
+func UpdateService(context echo.Context) error {
+	service := new(common.ServicePayload)
+	if err := context.Bind(service); err != nil {
+		return common.ErrorResponse(context, err.Error(), "Data binding error!!!")
+	}
+	name := context.Param("name")
+
+	var getService, err = serviceConfig.ClientSet.CoreV1().Services(metaV1.NamespaceDefault).
+		Get(serviceConfig.Context, name, metaV1.GetOptions{})
+	if err != nil {
+		return common.ErrorResponse(context, err.Error(), "Data getting error!!!")
+	}
+	//if &service.ServiceName != nil {
+	//	get_service.Name = service.ServiceName
+	//}
+	if &service.Selector != nil {
+		getService.Spec.Selector = map[string]string{
+			"app": service.Selector,
+		}
+	}
+	if &service.Type != nil {
+		switch service.Type {
+		case "inside":
+			getService.Spec.Type = coreV1.ServiceTypeClusterIP
+		case "outside":
+			getService.Spec.Type = coreV1.ServiceTypeLoadBalancer
+		default:
+			getService.Spec.Type = coreV1.ServiceTypeLoadBalancer
+		}
+	}
+	//if &service.Port != nil {
+	//	get_service.Spec.Ports.
+	//}
+	updated, err := serviceConfig.ClientSet.CoreV1().Services(metaV1.NamespaceDefault).
+		Update(serviceConfig.Context, getService, metaV1.UpdateOptions{})
+	if err != nil {
+		return common.ErrorResponse(context, err.Error(), "Data Updated error!!!")
+	}
+	return common.SuccessResponse(context, "Updated successfully", updated)
+}
