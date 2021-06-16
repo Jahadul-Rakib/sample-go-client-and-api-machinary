@@ -26,6 +26,9 @@ func DeployRouter(baseRouter *echo.Group) {
 
 func ServiceRouter(baseRouter *echo.Group) {
 	baseRouter.GET("", service.GetAllService)
+	baseRouter.GET("/:name", service.GetService)
+	baseRouter.DELETE("/:name", service.DeleteService)
+	baseRouter.POST("", service.CreateService)
 }
 
 func PodRouter(baseRouter *echo.Group) {
