@@ -103,7 +103,7 @@ func fitDeployPayload(context echo.Context) (*appsV1.Deployment, error) {
 	}
 	deployment := &appsV1.Deployment{
 		ObjectMeta: metaV1.ObjectMeta{
-			Name: data.AppsName + "-deployment",
+			Name: data.AppsName,
 		},
 		Spec: appsV1.DeploymentSpec{
 			Replicas: data.Replica,
