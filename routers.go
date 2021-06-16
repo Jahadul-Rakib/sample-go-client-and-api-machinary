@@ -20,6 +20,7 @@ func DeployRouter(baseRouter *echo.Group) {
 	baseRouter.GET("", service.GetAllDeployment)
 	baseRouter.GET("/:name", service.GetDeployment)
 	baseRouter.POST("", service.CreateDeployment)
+	baseRouter.PUT("/:name", service.UpdateDeployment)
 	baseRouter.DELETE("/:name", service.DeleteDeployment)
 }
 

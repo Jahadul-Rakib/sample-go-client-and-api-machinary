@@ -1,8 +1,8 @@
 package service
 
 import (
-	"go_client/common"
 	"github.com/labstack/echo/v4"
+	"go_client/common"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -18,7 +18,7 @@ func GetAllPods(context echo.Context) error {
 	}
 
 	for i, pod := range pods.Items {
-		podName[i] =pod.Name
+		podName[i] = pod.Name
 	}
 	return common.SuccessResponse(context, "Get All Pod Name", podName)
 }
