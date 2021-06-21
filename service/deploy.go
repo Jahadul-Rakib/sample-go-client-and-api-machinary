@@ -3,13 +3,14 @@ package service
 import (
 	"github.com/labstack/echo/v4"
 	"go_client/common"
+	appsV1 "k8s.io/api/apps/v1"
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var deployConfig = common.GetConfig()
 
 func GetAllDeployment(context echo.Context) error {
-	deploymentName := make(map[int]string)
+	deploymentName := make(map[int]appsV1.Deployment)
 
 	deploymentList, err := deployConfig.ClientSet.
 		AppsV1().Deployments(metaV1.NamespaceDefault).List(deployConfig.Context, metaV1.ListOptions{})
@@ -18,9 +19,9 @@ func GetAllDeployment(context echo.Context) error {
 	}
 
 	for i, deployment := range deploymentList.Items {
-		deploymentName[i] = deployment.Name
+		deploymentName[i] = deployment
 	}
-	return common.SuccessResponse(context, "Get All Deployment Name", deploymentName)
+	return common.SuccessResponse(context, "Get All Deployment.", deploymentName)
 }
 
 func GetDeployment(context echo.Context) error {

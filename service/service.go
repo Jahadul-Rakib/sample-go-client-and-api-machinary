@@ -11,7 +11,7 @@ var serviceConfig = common.GetConfig()
 
 func GetAllService(context echo.Context) error {
 
-	serviceName := make(map[int]string)
+	serviceName := make(map[int]coreV1.Service)
 
 	serviceList, ERROR := serviceConfig.ClientSet.CoreV1().
 		Services("default").List(serviceConfig.Context, metaV1.ListOptions{})
@@ -20,7 +20,7 @@ func GetAllService(context echo.Context) error {
 	}
 
 	for i, service := range serviceList.Items {
-		serviceName[i] = service.Name
+		serviceName[i] = service
 	}
 	return common.SuccessResponse(context, "Get All Service Name", serviceName)
 }
