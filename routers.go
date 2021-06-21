@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/labstack/echo/v4"
+	"go_client/common"
 	"go_client/service"
 )
 
@@ -12,6 +13,13 @@ func Router(e *echo.Echo) {
 
 	kubeApiServiceRouter := e.Group("api/v1/service")
 	ServiceRouter(kubeApiServiceRouter)
+
+	kafkaRouter := e.Group("api/v1/kafka")
+	KafkaRouter(kafkaRouter)
+}
+
+func KafkaRouter(baseRouter *echo.Group) {
+	baseRouter.PUT("/:name", common.SendMessage)
 }
 
 func DeployRouter(baseRouter *echo.Group) {
