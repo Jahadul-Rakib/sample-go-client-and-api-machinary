@@ -43,7 +43,7 @@ func SendMessage(ctx echo.Context) error {
 	produceError := producer.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
 		Key:            []byte(name),
-		Value:          []byte("---My Name is: " + name),
+		Value:          []byte("My Name is " + name),
 	}, nil)
 	if produceError != nil {
 		return ErrorResponse(ctx, err.Error(), "send message error...!!")

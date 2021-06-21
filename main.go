@@ -22,6 +22,5 @@ func main() {
 	common.GetConfig()
 
 	e.Logger.Fatal(e.Start(":8080"))
-	common.KafkaReceiver()
 
 }
