@@ -29,9 +29,8 @@ func KafkaReceiver() {
 		if err != nil {
 			log.Println("Consumer error...!! ------ ", err.Error())
 		}
-		log.Println(message.Key, " : ", message.Value)
+		log.Println(string(message.Key), " : ", string(message.Value), " !!!")
 	}
-	consumer.Close()
 }
 
 func SendMessage(ctx echo.Context) error {
