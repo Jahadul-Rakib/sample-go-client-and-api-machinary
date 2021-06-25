@@ -9,12 +9,12 @@ import (
 var topic = "test-topic"
 
 var consumerConfig = &kafka.ConfigMap{
-	"bootstrap.servers": "localhost:9091",
+	"bootstrap.servers": "localhost:29092, localhost:39092",
 	"group.id":          "test_group",
 	"auto.offset.reset": "earliest",
 }
 var producerConfig = &kafka.ConfigMap{
-	"bootstrap.servers": "localhost:9091",
+	"bootstrap.servers": "localhost:29092, localhost:39092",
 }
 
 func KafkaReceiver() {

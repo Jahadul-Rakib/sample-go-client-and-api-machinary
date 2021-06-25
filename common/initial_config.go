@@ -1,12 +1,12 @@
 package common
 
 import (
-	"k8s.io/client-go/kubernetes"
 	"context"
 	"flag"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
-	"sync"
 	"log"
+	"sync"
 )
 
 type Config struct {
@@ -26,14 +26,14 @@ func GetConfig() *Config {
 }
 
 func (c *Config) ConnectionKubernetesCluster() {
-	kubeconfig := flag.String("kubeconfig", "C:/Users/rafrr/.kube/config", "kubeconfig file location")
+	kubeconfig := flag.String("kubeconfig", "~/.kube/config", "kubeconfig file location")
 	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
 	if err != nil {
-		log.Println("Connection Error: ",err.Error())
+		log.Println("Connection Error: ", err.Error())
 	}
 	clientset, err := kubernetes.NewForConfig(config)
 	if err != nil {
-		log.Println("Connection Error: ",err.Error())
+		log.Println("Connection Error: ", err.Error())
 	}
 	c.ClientSet = clientset
 	c.Context = context.Background()
